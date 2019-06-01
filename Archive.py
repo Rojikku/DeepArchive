@@ -12,8 +12,13 @@ dbl = dbfolder + '/' + dbfilename #Database Location - Relative Path
 tbln = 'core' #Table name
 idc='FileName' #Identifying Column
 scan_exceptions = ['.da', 'db.sqlite'] #Files to ignore when scanning
+db_status = 0
 
 #Functions Section
+def Close(): #In case I add to it later
+    conn.commit() #Save
+    conn.close() #Close connection
+
 def Insert(Val): #Add New Entires To Database
     for x in Val:
         print("Adding {fn} to database".format(fn=x))
@@ -29,6 +34,11 @@ def Scan(): #Function for scanning
     return files #Return Array of all file names
 
 def Initialize(): #Function to create database foundations
+    global db_status
+    if db_status == 1:
+        Close()
+    os.chdir(dir) #Go to relevant  directory
+    print("Initializing...")
     exists = os.path.isfile(dbl) #Check if DB exists
     if not exists: #If it doesn't exist
         print("New Location: Initializing Database!")
@@ -36,56 +46,86 @@ def Initialize(): #Function to create database foundations
     global conn, c #Make DB connection global
     conn = sqlite3.connect(dbl)
     c = conn.cursor()
+    db_status = 1
     if not exists: #After Database Establishment, create table and populate
-        c.execute('CREATE TABLE {tn} ({nf} text, Name text, Description text, icon text, tags text)'\
+        c.execute('CREATE TABLE {tn} ({nf} text, Name text, Description text, Icon text, Tags text)'\
             .format(tn=tbln, nf=idc)) #Create Table and Identifying Column
         Insert(Scan()) #Initial Population
         conn.commit() #Save
+    print("Done!")
 
 #UI Functions
-class DAUI:
+class DAUI(Frame):
     def __init__(self, master):
+        Frame.__init__(self, master)
+        self.master = master
+
+        #Settings
         self.master = master
         master.title("Deep Archive: The File Library Manager")
 
+        #Menu Bar
+        # creating a menu instance
+        menu = Menu(self.master)
+        self.master.config(menu=menu)
+
+        # Declare File Menu
+        file = Menu(menu)
+        file.add_command(label="Open Library", command=self.browseLib)
+        file.add_command(label="Exit", command=master.quit)
+
+        # create the file object)
+        edit = Menu(menu)
+        edit.add_command(label="Undo")
+
+        #Add Entries to Menu Bar
+        menu.add_cascade(label="File", menu=file)
+        menu.add_cascade(label="Edit", menu=edit)
+
+        #String Data
         global Lbl1
         Lbl1 = StringVar()
         Lbl1.set("Please select library directory!")
         self.label = Label(master, textvariable=Lbl1)
-        # self.label.grid(row=0, column=1)
-        self.label.pack()
+        self.label.grid(row=0, column=2, padx=(10, 10), pady=(10, 10))
 
-        self.browse_button = Button(master, text="Browse", command=self.browse_buttonFn)
-        # self.browse_button.grid(row=2, column=1)
-        self.browse_button.pack()
+        self.close_button = Button(master, text="Load", command=Initialize)
+        self.close_button.grid(row=2, column=3, padx=(10, 10), pady=(10, 10))
 
-        self.close_button = Button(master, text="Close", command=master.quit)
-        self.close_button.pack()
+        self.center()
 
-
-    def browse_buttonFn(self):
+    def browseLib(self):
         # Allow user to select a directory and store it in global var
         # called dir
         global dir
-        filename = filedialog.askdirectory()
+        filename = filedialog.askdirectory(parent=root, title="Please Select Library Folder:")
         Lbl1.set(filename)
         dir = str(filename)
         print(dir)
+        Initialize()
 
+    def center(self):
+        # Gets the requested values of the height and widht.
+        windowWidth = root.winfo_reqwidth()
+        windowHeight = root.winfo_reqheight()
+        print("Width",windowWidth,"Height",windowHeight)
+
+        # Gets both half the screen width/height and window width/height
+        positionRight = int(root.winfo_screenwidth()/2 - windowWidth/2)
+        positionDown = int(root.winfo_screenheight()/2 - windowHeight/2)
+
+        # Positions the window in the center of the page.
+        root.geometry("+{}+{}".format(positionRight, positionDown))
+        root.geometry("400x300") #I'd like a less ugly default window size
 
 
 #Init
 root = Tk()
 ui = DAUI(root)
-root.mainloop()
-
-#Go to relevant  directory
-os.chdir(dir)
-
-Initialize()
 
 #Main
+root.mainloop()
 
-#Ends
-conn.commit()
-conn.close() #Close connection
+#End
+if db_status == 1:
+    Close() #Clean Exit

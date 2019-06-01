@@ -12,17 +12,21 @@ The goal for DeepArchive is to allow users to organize their files with features
 ## To Do
 
 ### User Interface
-- [X] Select Working Folder
+- [X] Select Library Folder
+- [X] Nice Menu Bar
+- [ ] Actual Window Layout
 - [ ] Show Database
 - [ ] Representative Images
 - [ ] Display Descriptions
 - [ ] Display Tags
 - [ ] Searchable Tags
 - [ ] Folders/Relations to other files
+- [ ] Less Ugly
 
 ### Database Side
 - [X] Have a Database
 - [X] Populate Database Automatically
+- [ ] Learn Reading from Database
 - [ ] Tags
 - [ ] Descriptions
 - [ ] Images?
