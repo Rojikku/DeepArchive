@@ -2,8 +2,8 @@
 import sqlite3 #Database
 import os #Needed to chdir
 import sys #Allow Arguments
-# from tkinter import filedialog #Select Folders
-# from tkinter import * #UI
+from tkinter import filedialog #Select Folders
+from tkinter import * #UI
 
 #Variables
 dbfolder = '.da' #Name of Database Folder
@@ -43,29 +43,41 @@ def Initialize(): #Function to create database foundations
         conn.commit() #Save
 
 #UI Functions
-def browse_button():
-    # Allow user to select a directory and store it in global var
-    # called dir
-    global dir
-    filename = filedialog.askdirectory()
-    dir.set(filename)
-    print(filename)
+class DAUI:
+    def __init__(self, master):
+        self.master = master
+        master.title("Deep Archive: The File Library Manager")
+
+        global Lbl1
+        Lbl1 = StringVar()
+        Lbl1.set("Please select library directory!")
+        self.label = Label(master, textvariable=Lbl1)
+        # self.label.grid(row=0, column=1)
+        self.label.pack()
+
+        self.browse_button = Button(master, text="Browse", command=self.browse_buttonFn)
+        # self.browse_button.grid(row=2, column=1)
+        self.browse_button.pack()
+
+        self.close_button = Button(master, text="Close", command=master.quit)
+        self.close_button.pack()
+
+
+    def browse_buttonFn(self):
+        # Allow user to select a directory and store it in global var
+        # called dir
+        global dir
+        filename = filedialog.askdirectory()
+        Lbl1.set(filename)
+        dir = str(filename)
+        print(dir)
 
 
 
 #Init
-#Check if directory passed as argument
-if len(sys.argv) > 1:
-    dir = sys.argv[1] #Directory in use
-
-# root = Tk()
-# dir = StringVar()
-# lbl1 = Label(master=root,textvariable=folder_path)
-# lbl1.grid(row=0, column=1)
-# button2 = Button(text="Browse", command=browse_button)
-# button2.grid(row=0, column=3)
-#
-# mainloop()
+root = Tk()
+ui = DAUI(root)
+root.mainloop()
 
 #Go to relevant  directory
 os.chdir(dir)

@@ -12,8 +12,8 @@ The goal for DeepArchive is to allow users to organize their files with features
 ## To Do
 
 ### User Interface
-- [ ] Literally Anything
-- [ ] Select Working Folder
+- [X] Select Working Folder
+- [ ] Show Database
 - [ ] Representative Images
 - [ ] Display Descriptions
 - [ ] Display Tags
