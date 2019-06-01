@@ -2,12 +2,13 @@
 #import kivy #UI
 import sqlite3 #Database
 import os #Needed to chdir
+import sys #Allow Arguments
+
 #Variables
 dbl = '.da/db.sqlite' #Database Location
 tbln = 'core' #Table name
-idc='Name' #Identifying Column
-dir = 'C:\\Users\\Rojikku\\Documents\\Library\\PDF' #Directory in use TEMPORARY
-scan_exceptions = ['.da'] #Files to ignore when scanning
+idc='FileName' #Identifying Column
+scan_exceptions = ['.da', 'db.sqlite'] #Files to ignore when scanning
 
 #Functions Section
 def Insert(Col, Val):
@@ -27,8 +28,13 @@ def Initialize(): #Function to create database foundations
     conn.commit() #Save
 
 #Init
+#Check if directory passed as argument
+if len(sys.argv) > 1:
+    dir = sys.argv[1] #Directory in use
+else:
+    print("Please specify a Directory")
+    exit()
 #Go to relevant  directory
-#Must add direcotry selecting functionality
 os.chdir(dir)
 
 exists = os.path.isfile(dbl) #Check if DB exists
