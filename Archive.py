@@ -13,6 +13,8 @@ tbln = 'core' #Table name
 idc='FileName' #Identifying Column
 scan_exceptions = ['.da', 'db.sqlite'] #Files to ignore when scanning
 db_status = 0
+conn = None
+c = None
 
 #Functions Section
 def Close(): #In case I add to it later
@@ -89,10 +91,23 @@ class DAUI(Frame):
         self.label = Label(master, textvariable=Lbl1)
         self.label.grid(row=0, column=2, padx=(10, 10), pady=(10, 10))
 
-        self.close_button = Button(master, text="Load", command=Initialize)
-        self.close_button.grid(row=2, column=3, padx=(10, 10), pady=(10, 10))
 
         self.center()
+
+    def populate(self):
+        global conn, c
+        files=[]
+        buttonList=[]
+        for row in c.execute('SELECT * FROM {tn} ORDER BY {ord}'.format(tn=tbln, ord=idc)):
+            files.append(row)
+            for i in range(len(files)):
+                name = files[i][0]
+                print("File loaded from DB: " + name)
+                newButton = Button(root, text=name, command = lambda j=name: openFile(j))
+                buttonList.append(newButton)
+        for i,x in enumerate(buttonList):
+            x.grid(row=2, column=i, padx=(10, 10), pady=(10, 10))
+
 
     def browseLib(self):
         # Allow user to select a directory and store it in global var
@@ -103,6 +118,7 @@ class DAUI(Frame):
         dir = str(filename)
         print(dir)
         Initialize()
+        self.populate()
 
     def center(self):
         # Gets the requested values of the height and widht.
