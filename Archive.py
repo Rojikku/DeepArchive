@@ -12,9 +12,9 @@ dbl = dbfolder + '/' + dbfilename #Database Location - Relative Path
 tbln = 'core' #Table name
 idc='FileName' #Identifying Column
 scan_exceptions = ['.da', 'db.sqlite'] #Files to ignore when scanning
-db_status = 0
-conn = None
-c = None
+db_status = 0 #Current DB Status
+conn = None #Set a default
+c = None #Set a default
 
 #Functions Section
 def Close(): #In case I add to it later
@@ -94,7 +94,7 @@ class DAUI(Frame):
 
         self.center()
 
-    def populate(self):
+    def populate(self): #Function for adding menu entries from Database
         global conn, c
         files=[]
         buttonList=[]
@@ -109,7 +109,7 @@ class DAUI(Frame):
             x.grid(row=2, column=i, padx=(10, 10), pady=(10, 10))
 
 
-    def browseLib(self):
+    def browseLib(self): #Select Library Location
         # Allow user to select a directory and store it in global var
         # called dir
         global dir
@@ -120,7 +120,7 @@ class DAUI(Frame):
         Initialize()
         self.populate()
 
-    def center(self):
+    def center(self): #Function to center window
         # Gets the requested values of the height and widht.
         windowWidth = root.winfo_reqwidth()
         windowHeight = root.winfo_reqheight()
