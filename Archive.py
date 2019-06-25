@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 import sqlite3 #Database
 import os #Needed to chdir
-import sys #Allow Arguments
+import sys #Allow Arguments, prevent crashes
+import traceback #Prevent Crashes
 import argparse as arg #Better Arguments
 import logging as log #For logging verbosity options
 import atexit #Cleaner exit
 import signal #Catch for clean exit
 from PyQt5.QtCore import QTimer #Allow forced exit
 from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget, QMainWindow, QAction, qApp, QLabel, QFileDialog, QGridLayout, \
-QPushButton, QStackedWidget
+QPushButton, QStackedWidget, QMessageBox
 from PyQt5.QtGui import QIcon
 
 #Load Arguments
@@ -76,8 +77,13 @@ def Initialize(): #Function to create database foundations
     log.info("Initializing...")
     exists = os.path.isfile(dbl) #Check if DB exists
     if not exists: #If it doesn't exist
-        log.info("New Location: Initializing Database!")
-        os.mkdir(dbfolder) #Make DB folder
+        res = DAUI.showdialog("No Library Found!", "Make this location a library?")
+        if res == "Yes": #Make database only when sure
+            log.info("Initializing new Database...")
+            os.mkdir(dbfolder) #Make DB folder
+        else:
+            log.info("Canceled Initialization!")
+            return False
     global conn, c #Make DB connection global
     conn = sqlite3.connect(dbl)
     c = conn.cursor()
@@ -88,6 +94,7 @@ def Initialize(): #Function to create database foundations
         Insert(Scan()) #Initial Population
         conn.commit() #Save
     log.info("Done!")
+    return True
 
 def Search(type, req): #Search function, with type and request
     res = []
@@ -142,15 +149,36 @@ class DAUI(QMainWindow):
 
         self.show()
 
+    def showdialog(title, prompt): # https://www.tutorialspoint.com/pyqt/pyqt_qmessagebox.htm
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Question)
+        msg.setText(prompt)
+        # msg.setInformativeText("This is additional information")
+        msg.setWindowTitle(title)
+        # msg.setDetailedText("The details are as follows:")
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        return msg.exec_() #Return selection
+
     def browseLib(self): #Select Library Location
         # Allow user to select a directory and store it in global var
         # called dir
-        global dir
-        dir = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        self.setWindowTitle(dir + " - Deep Archive")
-        print(dir)
-        Initialize()
-        FileUI.populate(self)
+        try:
+            global dir
+            dir = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+            if not dir: #Check if directory was selected
+                raise NameError("Directory not selected!")
+        except NameError as error: #Nothing selected
+            log.warning(error)
+        except: #Unknown Errors
+            log.error("Error Encountered!")
+        else: #Execute if no problem
+            self.setWindowTitle(dir + " - Deep Archive")
+            log.info("Selected Directory: " + dir)
+            if Initialize(): #Only populate if initialization succeeds
+                FileUI.populate(self)
+                return True
+        return False
+
 
     def center(self): #Function to center window
         qr = self.frameGeometry()
@@ -186,6 +214,8 @@ try:
     app = QApplication(sys.argv)
     ui = DAUI()
 
+    #Stop meaningless crashes
+    sys.excepthook = traceback.print_exception
     #Run a timer to catch interrupts
     timer = QTimer()
     timer.timeout.connect(lambda: None)
