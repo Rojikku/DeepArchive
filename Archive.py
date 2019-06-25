@@ -4,6 +4,7 @@ import os #Needed to chdir
 import sys #Allow Arguments
 import argparse as arg #Better Arguments
 import logging as log #For logging verbosity options
+import atexit #Cleaner exit
 from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget, QMainWindow, QAction, qApp, QLabel, QFileDialog, QGridLayout, \
 QPushButton, QStackedWidget
 from PyQt5.QtGui import QIcon
@@ -37,9 +38,10 @@ db_status = 0 #Current DB Status
 
 #Functions Section
 def Close(): #In case I add to it later
-    conn.commit() #Save
-    conn.close() #Close connection
-    log.info("Saved and closed!")
+    if db_status == 1:
+        conn.commit() #Save
+        conn.close() #Close connection
+        log.info("Saved and closed!")
 
 def Insert(Val): #Add New Entires To Database
     for x in Val:
@@ -164,11 +166,16 @@ class FileUI(QWidget): #Widget for main window pane
             button = QPushButton(name)
             grid.addWidget(button, *position)
 
-#Init
-app = QApplication(sys.argv)
-ui = DAUI()
-sys.exit(app.exec_()) #Load UI
+#Setup Cleanup
+atexit.register(Close)
 
-#End
-if db_status == 1:
-    Close() #Clean Exit
+#Init
+try: #Doesn't catch ctrl c while UI is loaded? BUG
+    app = QApplication(sys.argv)
+    ui = DAUI()
+    app.exec_() #Load UI
+except (KeyboardInterrupt, SystemExit): #Catch interupts and close cleanly
+    log.error("Interupt Received, stopping...")
+    sys.exit()
+except:
+    pass
