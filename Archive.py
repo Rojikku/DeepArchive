@@ -9,7 +9,7 @@ import atexit #Cleaner exit
 import signal #Catch for clean exit
 from PyQt5.QtCore import QTimer #Allow forced exit
 from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget, QMainWindow, QAction, qApp, QLabel, QFileDialog, QGridLayout, \
-QPushButton, QStackedWidget, QMessageBox
+QPushButton, QStackedWidget, QMessageBox, QGroupBox, QVBoxLayout
 from PyQt5.QtGui import QIcon
 
 #Load Arguments
@@ -102,6 +102,12 @@ def Search(type, req): #Search function, with type and request
     if type == "single": #If only searching for one column
         for row in c.execute('SELECT {fld} FROM {tn} ORDER BY {ord}'.format(tn=tbln, ord=idc, fld=req)):
             res.append(row[0])
+    elif type == "multi":
+        for row in c.execute('SELECT {fld} FROM {tn} ORDER BY {ord}'.format(tn=tbln, ord=idc, fld=req)):
+            res.append(row)
+    else:
+        log.error("Scan type not found: " + type)
+        return False
     log.debug(res)
     return res
 
@@ -199,11 +205,40 @@ class FileUI(QWidget): #Widget for main window pane
 
     def populate(self):
         global conn, c, grid, idc #Load DB and Layout
-        fileNames = Search("single", idc) #Search by identifying column
+        # fileNames = Search("single", idc) #Search by identifying column
+        fileNames = Search("multi", idc + ", Name") #Search by identifying column
         positions = [(i,j) for i in range(10) for j in range(4)]
-        for position, name in zip(positions, fileNames):
-            button = QPushButton(name)
-            grid.addWidget(button, *position)
+        groups = []
+        for put in fileNames:
+            fname = put[0] #Full Name
+            name = put[1] #Nickname
+            # log.debug("Putting " + fname) #For issues with variable declaration
+            groups.append(FileUI.makeGroup(self, fname, name))
+        for position, name in zip(positions, groups):
+            # button = QPushButton(name)
+            grid.addWidget(name, *position)
+
+    def makeGroup(self, fname, name):
+        # log.debug(str(type(fname)) + " " + str(type(name))) #For issues with passing variables
+        groupBox = QGroupBox(fname) #Elected to have full filename above each box for now
+        if type(name) == tuple:
+            name = name[0]
+        if name == None or not name:
+            log.debug("Making group for file with full name of " + fname)
+            # groupBox = QGroupBox(name)
+            sel = QPushButton(fname)
+        else:
+            log.debug("Making group for file nicknamed " + str(name) + " with full name of " + fname)
+            sel = QPushButton(name)
+            sel.setToolTip(name)
+
+        vbox = QVBoxLayout()
+        vbox.addStretch(2) #Placeholder for pictures
+        vbox.addWidget(sel)
+
+        groupBox.setLayout(vbox)
+
+        return groupBox
 
 #Setup Cleanup
 atexit.register(Close)
