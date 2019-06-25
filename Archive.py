@@ -5,7 +5,7 @@ import sys #Allow Arguments
 import argparse as arg #Better Arguments
 import logging as log #For logging verbosity options
 import atexit #Cleaner exit
-import signal #Allow forced exit
+import signal #Catch for clean exit
 from PyQt5.QtCore import QTimer #Allow forced exit
 from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget, QMainWindow, QAction, qApp, QLabel, QFileDialog, QGridLayout, \
 QPushButton, QStackedWidget
@@ -13,7 +13,7 @@ from PyQt5.QtGui import QIcon
 
 #Load Arguments
 parser = arg.ArgumentParser(
-    description='The Deep Archive Utility'
+    description='The Deep Archive Library Management Utility'
 )
 parser.add_argument(
     "-d", "--debug",
@@ -27,7 +27,7 @@ parser.add_argument(
     action="store_const", dest="loglevel", const=log.INFO,
 )
 args = parser.parse_args()
-log.basicConfig(format='%(levelname)s: %(message)s', level=args.loglevel)
+log.basicConfig(format='%(levelname)s: %(message)s', level=args.loglevel) #Configure Logging
 
 #Variables
 dbfolder = '.da' #Name of Database Folder
