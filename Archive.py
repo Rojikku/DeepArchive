@@ -5,6 +5,8 @@ import sys #Allow Arguments
 import argparse as arg #Better Arguments
 import logging as log #For logging verbosity options
 import atexit #Cleaner exit
+import signal #Allow forced exit
+from PyQt5.QtCore import QTimer #Allow forced exit
 from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget, QMainWindow, QAction, qApp, QLabel, QFileDialog, QGridLayout, \
 QPushButton, QStackedWidget
 from PyQt5.QtGui import QIcon
@@ -42,6 +44,15 @@ def Close(): #In case I add to it later
         conn.commit() #Save
         conn.close() #Close connection
         log.info("Saved and closed!")
+
+def Interrupt_Handling():
+    #Setup handling of KeyboardInterrupt for PyQt
+    signal.signal(signal.SIGINT, _interrupt_handler)
+    signal.signal(signal.SIGABRT, _interrupt_handler)
+
+def _interrupt_handler(signum, frame):
+    #Handle Keyboard Interrupt, quit
+    QApplication.quit()
 
 def Insert(Val): #Add New Entires To Database
     for x in Val:
@@ -170,9 +181,16 @@ class FileUI(QWidget): #Widget for main window pane
 atexit.register(Close)
 
 #Init
-try: #Doesn't catch ctrl c while UI is loaded? BUG
+try:
+    Interrupt_Handling() #Define interrupts to catch
     app = QApplication(sys.argv)
     ui = DAUI()
+
+    #Run a timer to catch interrupts
+    timer = QTimer()
+    timer.timeout.connect(lambda: None)
+    timer.start(100)
+
     app.exec_() #Load UI
 except (KeyboardInterrupt, SystemExit): #Catch interupts and close cleanly
     log.error("Interupt Received, stopping...")
