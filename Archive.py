@@ -172,8 +172,8 @@ class DAUI(QMainWindow):
         except: #Unknown Errors
             log.error("Error Encountered!")
         else: #Execute if no problem
-            self.setWindowTitle(dir + " - Deep Archive")
             log.info("Selected Directory: " + dir)
+            self.setWindowTitle(dir + " - Deep Archive")
             if Initialize(): #Only populate if initialization succeeds
                 FileUI.populate(self)
                 return True
