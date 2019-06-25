@@ -14,8 +14,8 @@ The goal for DeepArchive is to allow users to organize their files with features
 ### User Interface
 - [X] Select Library Folder
 - [X] Nice Menu Bar
-- [ ] Actual Window Layout
-- [ ] Show Database
+- [X] Actual Window Layout
+- [X] Show Database
 - [ ] Representative Images
 - [ ] Display Descriptions
 - [ ] Display Tags
@@ -26,7 +26,7 @@ The goal for DeepArchive is to allow users to organize their files with features
 ### Database Side
 - [X] Have a Database
 - [X] Populate Database Automatically
-- [ ] Learn Reading from Database
+- [X] Learn Reading from Database
 - [ ] Tags
 - [ ] Descriptions
 - [ ] Images?
