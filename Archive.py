@@ -2,8 +2,29 @@
 import sqlite3 #Database
 import os #Needed to chdir
 import sys #Allow Arguments
-from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget, QMainWindow, QAction, qApp, QLabel, QFileDialog, QGridLayout, QPushButton, QStackedWidget
+import argparse as arg #Better Arguments
+import logging as log #For logging verbosity options
+from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget, QMainWindow, QAction, qApp, QLabel, QFileDialog, QGridLayout, \
+QPushButton, QStackedWidget
 from PyQt5.QtGui import QIcon
+
+#Load Arguments
+parser = arg.ArgumentParser(
+    description='The Deep Archive Utility'
+)
+parser.add_argument(
+    "-d", "--debug",
+    help="Print full debug output",
+    action="store_const", dest="loglevel", const=log.DEBUG,
+    default=log.WARNING,
+)
+parser.add_argument(
+    "-v", "--verbose",
+    help="Increase Verbosity",
+    action="store_const", dest="loglevel", const=log.INFO,
+)
+args = parser.parse_args()
+log.basicConfig(format='%(levelname)s: %(message)s', level=args.loglevel)
 
 #Variables
 dbfolder = '.da' #Name of Database Folder
@@ -18,6 +39,7 @@ db_status = 0 #Current DB Status
 def Close(): #In case I add to it later
     conn.commit() #Save
     conn.close() #Close connection
+    log.info("Saved and closed!")
 
 def Insert(Val): #Add New Entires To Database
     for x in Val:
@@ -38,10 +60,10 @@ def Initialize(): #Function to create database foundations
     if db_status == 1:
         Close()
     os.chdir(dir) #Go to relevant  directory
-    print("Initializing...")
+    log.info("Initializing...")
     exists = os.path.isfile(dbl) #Check if DB exists
     if not exists: #If it doesn't exist
-        print("New Location: Initializing Database!")
+        log.info("New Location: Initializing Database!")
         os.mkdir(dbfolder) #Make DB folder
     global conn, c #Make DB connection global
     conn = sqlite3.connect(dbl)
@@ -52,7 +74,17 @@ def Initialize(): #Function to create database foundations
             .format(tn=tbln, nf=idc)) #Create Table and Identifying Column
         Insert(Scan()) #Initial Population
         conn.commit() #Save
-    print("Done!")
+    log.info("Done!")
+
+def Search(type, req): #Search function, with type and request
+    res = []
+    log.debug("Doing a " + type + " search for: " + req)
+    if type == "single": #If only searching for one column
+        for row in c.execute('SELECT {fld} FROM {tn} ORDER BY {ord}'.format(tn=tbln, ord=idc, fld=req)):
+            res.append(row[0])
+    log.debug(res)
+    return res
+
 
 #UI Functions
 class DAUI(QMainWindow):
@@ -125,16 +157,9 @@ class FileUI(QWidget): #Widget for main window pane
         self.setLayout(grid)
 
     def populate(self):
-        global conn, c, grid #Load DB and Layout
-        fileEntries = []
-        fileNames = []
+        global conn, c, grid, idc #Load DB and Layout
+        fileNames = Search("single", idc) #Search by identifying column
         positions = [(i,j) for i in range(10) for j in range(4)]
-        for row in c.execute('SELECT * FROM {tn} ORDER BY {ord}'.format(tn=tbln, ord=idc)):
-            fileEntries.append(row)
-        for i in range(len(fileEntries)):
-            name = fileEntries[i][0]
-            print("File loaded from DB: " + name)
-            fileNames.append(name)
         for position, name in zip(positions, fileNames):
             button = QPushButton(name)
             grid.addWidget(button, *position)
