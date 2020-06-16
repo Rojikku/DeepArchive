@@ -1,0 +1,53 @@
+body {
+    background: #2c2e33;
+}
+
+@font-face {
+  font-family: 'RobotoMono NF';
+    src: url('https://cdn.jsdelivr.net/gh/ryanoasis/nerd-fonts@5f748cdb104a241ec8ac229f24518f3f867e8eb2/patched-fonts/RobotoMono/Regular/complete/Roboto%20Mono%20Nerd%20Font%20Complete%20Mono%20Windows%20Compatible.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  letter-spacing: -0.1em;
+}
+
+.navbar {
+    background-color:#313338;
+    font-size: 1em;
+    font-family: 'RobotoMono NF', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: #edf0f1;
+    padding: 8px 5px;
+    position: relative;
+    box-shadow: 1px 1px #000000;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.navbar-brand {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.navbar-item {
+    font-variant: small-caps;
+    margin-left: 30px;
+}
+
+.body-container {
+    padding: 5px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #363941;
+    color: #d8dce7;
+    box-shadow: 1px 1px #000000;
+}
+
+.body-main {
+    min-height: 40vh;
+    padding: 10px 5px 5px;
+}
+
+footer {
+    text-align: center;
+}
