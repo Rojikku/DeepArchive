@@ -11,6 +11,7 @@
 <body>
     <div class="navbar">
         <a href="{% url 'home' %}" class="navbar-brand">Home</a>
+        <a href="{% url 'archive' %}" class="navbar-item">Archives</a>
     </div>
 
     <div class="body-container">
@@ -20,7 +21,8 @@
         </div>
         <footer>
         <hr />
-            <p>DeepArchive v0.1</p>
+            {% load version %}
+            <p>DeepArchive {% current_version %}</p>
         </footer>
     </div>
 </body>
