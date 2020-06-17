@@ -1,7 +1,12 @@
 """
 Interface Views
 """
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.template.defaultfilters import slugify
+from taggit.models import Tag
+
+from interface.models import Archive
+from interface.forms import ArchiveForm
 
 # Create your views here.
 
@@ -16,7 +21,18 @@ def archive(request):
     """
     Archive List
     """
-    return render(request, "interface/db.html")
+    archives = Archive.objects.order_by('title')
+    form = ArchiveForm(request.POST)
+    if form.is_valid():
+        newarchive = form.save(commit=False)
+        newarchive.slug = slugify(newarchive.title)
+        newarchive.save()
+        form.save_m2m()
+    context = {
+        'archives': archives,
+        'form': form,
+    }
+    return render(request, "interface/db.html", context)
 
 def archiveviewer(request, dbname):
     """
