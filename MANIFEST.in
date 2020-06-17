@@ -1,0 +1,2 @@
+include versioneer.py
+include DeepArchive/_version.py
