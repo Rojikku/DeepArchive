@@ -1,4 +1,4 @@
-{% extends "interface/layout.html" %}
+{% extends "DeepArchive/layout.html" %}
 {% block title %}
 Archive List
 {% endblock %}
@@ -22,6 +22,6 @@ Archive List
             </tbody>
         </table>
     {% else %}
-        <p>No archives have been made. Create one at the <a href="{% url 'achivecreator' %}">archive creator</a>.</p>
+        <p>No archives have been made. Create one at the <a href="{% url 'archivecreator' %}">Archive Creator</a>.</p>
     {% endif %}
 {% endblock %}

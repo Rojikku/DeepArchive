@@ -4,7 +4,7 @@ Give Current Version to templates
 from os import path
 import subprocess
 from django import template
-import interface
+import DeepArchive
 
 register = template.Library()
 
@@ -21,7 +21,7 @@ def current_version():
             ["git", "describe", "--tags"],
             cwd=BASE_DIR).decode('utf-8').strip()
     except:
-        build = interface.__version__ + "-dev-"
+        build = DeepArchive.__version__ + "-dev-"
         build += subprocess.check_output(
             ["git", "describe", "--tags", "--always"],
             cwd=BASE_DIR).decode('utf-8').strip()

@@ -2,7 +2,7 @@
 Forms for Database Models
 """
 from django import forms
-from interface.models import Archive
+from DeepArchive.models import Archive
 
 
 class ArchiveForm(forms.ModelForm):

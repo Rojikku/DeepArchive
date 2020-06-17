@@ -1,15 +1,15 @@
 """
-Interface URLs
+DeepArchive URLs
 """
 
 from django.urls import path
-from interface import views
-from interface.models import Archive
+from DeepArchive import views
+from DeepArchive.models import Archive
 
 archive_list_view = views.ArchiveList.as_view(
     queryset=Archive.objects.order_by("title"),
     context_object_name="archive_list",
-    template_name="interface/dblist.html"
+    template_name="DeepArchive/dblist.html"
 )
 
 urlpatterns = [
