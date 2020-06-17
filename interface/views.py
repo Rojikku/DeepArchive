@@ -43,7 +43,7 @@ def archivecreator(request):
             newarchive.slug = slugify(newarchive.title)
             newarchive.save()
             form.save_m2m()
-            return redirect("archive")
+            return redirect("archivelist")
     else:
         context = {
             'form': form,
