@@ -3,5 +3,25 @@
 Archive List
 {% endblock %}
 {% block content %}
-List of Archives Here
+    <h2>Archives</h2>
+    {% if archive_list %}
+        <table class="archive_list">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for archive in archive_list %}
+                    <tr>
+                        <td>{{ archive.title }}</td>
+                        <td>{{ archive.description }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No archives have been made. Create one at the <a href="{% url 'achivecreator' %}">archive creator</a>.</p>
+    {% endif %}
 {% endblock %}

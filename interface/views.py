@@ -1,8 +1,9 @@
 """
 Interface Views
 """
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template.defaultfilters import slugify
+from django.views.generic import ListView
 from taggit.models import Tag
 
 from interface.models import Archive
@@ -15,24 +16,17 @@ def home(request):
     """
     Homepage
     """
+    archives = Archive.objects.order_by('title')
     return render(request, "interface/home.html")
 
-def archive(request):
+class ArchiveList(ListView):
     """
     Archive List
     """
-    archives = Archive.objects.order_by('title')
-    form = ArchiveForm(request.POST)
-    if form.is_valid():
-        newarchive = form.save(commit=False)
-        newarchive.slug = slugify(newarchive.title)
-        newarchive.save()
-        form.save_m2m()
-    context = {
-        'archives': archives,
-        'form': form,
-    }
-    return render(request, "interface/db.html", context)
+    model = Archive
+    def get_context_data(self, **kwargs):
+        context = super(ArchiveList, self).get_context_data(**kwargs)
+        return context
 
 def archiveviewer(request, dbname):
     """
@@ -40,10 +34,24 @@ def archiveviewer(request, dbname):
     DBnew: Create an Archive
     DBview: View an Archive
     """
-    if dbname is not None:
-        return render(request, "interface/dbview.html",
-                      {
-                          "dbname": dbname,
-                      })
+    return render(request, "interface/dbview.html",
+                    {
+                        "dbname": dbname,
+                    })
+
+def archivecreator(request):
+    """Create a new Archive"""
+    form = ArchiveForm(request.POST or None)
+
+    if request.method == "POST":
+        if form.is_valid():
+            newarchive = form.save(commit=False)
+            newarchive.slug = slugify(newarchive.title)
+            newarchive.save()
+            form.save_m2m()
+            return redirect("archive")
     else:
-        return render(request, "interface/dbnew.html")
+        context = {
+            'form': form,
+        }
+        return render(request, "interface/dbnew.html", context)
