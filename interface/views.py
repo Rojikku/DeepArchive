@@ -9,24 +9,17 @@ from taggit.models import Tag
 from interface.models import Archive
 from interface.forms import ArchiveForm
 
-# Create your views here.
-
-
-def home(request):
-    """
-    Homepage
-    """
-    archives = Archive.objects.order_by('title')
-    return render(request, "interface/home.html")
 
 class ArchiveList(ListView):
     """
-    Archive List
+    Archive List and default page
     """
     model = Archive
+
     def get_context_data(self, **kwargs):
         context = super(ArchiveList, self).get_context_data(**kwargs)
         return context
+
 
 def archiveviewer(request, dbname):
     """
@@ -35,9 +28,10 @@ def archiveviewer(request, dbname):
     DBview: View an Archive
     """
     return render(request, "interface/dbview.html",
-                    {
-                        "dbname": dbname,
-                    })
+                  {
+                      "dbname": dbname,
+                  })
+
 
 def archivecreator(request):
     """Create a new Archive"""

@@ -9,12 +9,11 @@ from interface.models import Archive
 archive_list_view = views.ArchiveList.as_view(
     queryset=Archive.objects.order_by("title"),
     context_object_name="archive_list",
-    template_name="interface/db.html"
+    template_name="interface/dblist.html"
 )
 
 urlpatterns = [
-    path("", views.home, name="home"),
-    path("db", archive_list_view, name="archive"),
+    path("", archive_list_view, name="archivelist"),
     path("db/<dbname>", views.archiveviewer, name="archiveviewer"),
     path("newdb", views.archivecreator, name="archivecreator"),
 ]
