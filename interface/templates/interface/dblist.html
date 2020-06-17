@@ -5,14 +5,14 @@ Archive List
 {% block content %}
     <h2>Archives</h2>
     {% if archive_list %}
-        <table class="archive_list">
+        <table class="table archive_list">
             <thead>
                 <tr>
                     <th>Title</th>
                     <th>Description</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class = "table-body">
                 {% for archive in archive_list %}
                     <tr>
                         <td>{{ archive.title }}</td>
