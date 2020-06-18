@@ -43,6 +43,8 @@ body {
 }
 
 .table {
+    background-color: rgba(44, 62, 80, 0.384);
+    box-shadow: 2px 2px rgba(0, 0, 0, 0.3);
     border-collapse: collapse;
     width: 100%;
 }
@@ -76,7 +78,7 @@ body {
 .form {
     font-family: roboto;
     font-size: 1em;
-    background-color: rgba(84, 87, 100, 0.2);
+    background-color: rgba(113, 118, 138, 0.2);
     border-radius: 6px;
     padding: 1px 5px;
 }

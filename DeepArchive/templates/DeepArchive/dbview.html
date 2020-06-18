@@ -1,7 +1,32 @@
 {% extends "DeepArchive/layout.html" %}
 {% block title %}
-{{ dbname }} Archive
+{{ dbname|title }} Archive
 {% endblock %}
 {% block content %}
-Displaying Archive {{ dbname }}
+    <h2>{{ dbname|title }} Archive</h2>
+    <a href="{% url 'itemsetcreator' %}">New Item Set</a>
+    {% if set_list %}
+    <table class="table archive_view">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Added</th>
+                <th>Archive</th>
+            </tr>
+        </thead>
+        <tbody class="table-body">
+            {% for set in set_list %}
+            <tr class="row-link">
+                <td>{{ set.title }}</td>
+                <td>{{ set.description }}</td>
+                <td>{{ set.added }}</td>
+                <td>{{ set.archive }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No item sets have been made. Create a <a href="{% url 'itemsetcreator' %}">New Item Set</a>?</p>
+    {% endif %}
 {% endblock %}

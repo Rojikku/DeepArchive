@@ -14,7 +14,7 @@ Archive List
             </thead>
             <tbody class = "table-body">
                 {% for archive in archive_list %}
-                    <tr>
+                    <tr class="row-link" href="{% url 'archiveviewer' dbname=archive.slug %}">
                         <td>{{ archive.title }}</td>
                         <td>{{ archive.description }}</td>
                     </tr>

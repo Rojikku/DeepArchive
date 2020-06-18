@@ -2,7 +2,7 @@
 Forms for Database Models
 """
 from django import forms
-from DeepArchive.models import Archive
+from DeepArchive.models import Archive, ItemSet
 
 
 class ArchiveForm(forms.ModelForm):
@@ -12,4 +12,15 @@ class ArchiveForm(forms.ModelForm):
         fields = [
             'title',
             'description',
+        ]
+
+class ItemSetForm(forms.ModelForm):
+    """Form for ItemSet Model"""
+    class Meta:
+        model = ItemSet
+        fields = [
+            'title',
+            'archive',
+            'description',
+            'images',
         ]

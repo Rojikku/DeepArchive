@@ -12,8 +12,14 @@ archive_list_view = views.ArchiveList.as_view(
     template_name="DeepArchive/dblist.html"
 )
 
+archive_viewer_view = views.ArchiveViewer.as_view(
+    context_object_name="set_list",
+    template_name="DeepArchive/dbview.html"
+)
+
 urlpatterns = [
     path("", archive_list_view, name="archivelist"),
-    path("db/<dbname>", views.archiveviewer, name="archiveviewer"),
-    path("newdb", views.archivecreator, name="archivecreator"),
+    path("db/<dbname>", archive_viewer_view, name="archiveviewer"),
+    path("new/db", views.archivecreator, name="archivecreator"),
+    path("new/itemset", views.itemsetcreator, name="itemsetcreator"),
 ]
