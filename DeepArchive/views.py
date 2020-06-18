@@ -29,8 +29,7 @@ class ArchiveViewer(ListView):
 
     def get_queryset(self):
         dbname = self.kwargs['dbname']
-        # return ItemSet.objects.filter(archive=dbname)
-        return ItemSet.objects.order_by("title")
+        return ItemSet.objects.filter(archive__slug=dbname)
 
     def get_context_data(self, **kwargs):
         context = super(ArchiveViewer, self).get_context_data(**kwargs)

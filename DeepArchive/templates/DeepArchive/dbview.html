@@ -4,8 +4,8 @@
 {% endblock %}
 {% block content %}
     <h2>{{ dbname|title }} Archive</h2>
-    <a href="{% url 'itemsetcreator' %}">New Item Set</a>
     {% if set_list %}
+    <a href="{% url 'itemsetcreator' %}">New Item Set</a>
     <table class="table archive_view">
         <thead>
             <tr>

@@ -24,7 +24,7 @@ class ItemSet(models.Model):
     description = models.TextField()
     added = models.DateField(auto_now_add=True)
     slug = models.SlugField(unique=True, max_length=100)
-    archive = models.ManyToManyField(Archive)
+    archive = models.ForeignKey('Archive', on_delete=models.CASCADE)
     images = models.ImageField(null=True,blank=True)
     tags = TaggableManager()
 
