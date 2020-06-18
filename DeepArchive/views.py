@@ -10,33 +10,29 @@ from DeepArchive.models import Archive, ItemSet
 from DeepArchive.forms import ArchiveForm, ItemSetForm
 
 
-class ArchiveList(ListView):
+def archive_list(request):
     """
     Archive List and default page
     """
-    model = Archive
+    archives = Archive.objects.order_by("title")
+    return render(request, 'DeepArchive/dblist.html', {
+        'archive_list': archives,
+    })
 
-    def get_context_data(self, **kwargs):
-        context = super(ArchiveList, self).get_context_data(**kwargs)
-        return context
 
-
-class ArchiveViewer(ListView):
+def archive_viewer(request, dbname):
     """
     Display the set contents of an Archive based on dbname
     """
-    model = ItemSet
-
-    def get_queryset(self):
-        dbname = self.kwargs['dbname']
-        return ItemSet.objects.filter(archive__slug=dbname)
-
-    def get_context_data(self, **kwargs):
-        context = super(ArchiveViewer, self).get_context_data(**kwargs)
-        return context
+    ver_db = get_object_or_404(Archive, slug=dbname)
+    iset = ItemSet.objects.filter(archive=ver_db)
+    return render(request, 'DeepArchive/dbview.html', {
+        'dbname': dbname,
+        'set_list': iset,
+    })
 
 
-def archivecreator(request):
+def archive_creator(request):
     """Create a new Archive"""
     form = ArchiveForm(request.POST or None)
 
@@ -54,7 +50,7 @@ def archivecreator(request):
         return render(request, "DeepArchive/dbnew.html", context)
 
 
-def itemsetcreator(request):
+def itemset_creator(request):
     """Create a new ItemSet"""
     form = ItemSetForm(request.POST or None)
 

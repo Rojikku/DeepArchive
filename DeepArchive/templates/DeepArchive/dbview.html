@@ -6,6 +6,21 @@
     <h2>{{ dbname|title }} Archive</h2>
     {% if set_list %}
     <a href="{% url 'itemsetcreator' %}">New Item Set</a>
+    <!-- <div class="SetWrapper">
+        <div class="SetContent">
+            {% for set in set_list %}
+                <div class="SetTile">
+                    <a class="SetTile-Link">
+                        <div class="SetTile-Thumb">
+                            
+                        </div>
+                        <div class="SetTile-Body">
+                            Test
+                        </div>
+                    </a>
+                </div>
+        </div>
+    </div> -->
     <table class="table archive_view">
         <thead>
             <tr>
@@ -16,7 +31,6 @@
             </tr>
         </thead>
         <tbody class="table-body">
-            {% for set in set_list %}
             <tr class="row-link">
                 <td>{{ set.title }}</td>
                 <td>{{ set.description }}</td>

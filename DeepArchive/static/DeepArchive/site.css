@@ -83,7 +83,7 @@ body {
     padding: 1px 5px;
 }
 
-.form input, .form textarea {
+.form input, .form textarea, .form select {
     display: table;
     width: 100%;
     padding: 12px 20px;
@@ -94,6 +94,11 @@ body {
     background-color: rgba(0, 0, 0, 0.1);
     color: inherit;
     box-shadow: 3px 3px rgba(0, 0, 0, 0.5);
+}
+
+.form option {
+    color: inherit;
+    background-color: #4f5461;
 }
 
 .form button{
@@ -110,6 +115,12 @@ body {
     display: block;
     box-shadow: 3px 3px rgba(0, 0, 0, 0.5);
 }
+
+.SetContent {
+    display: flex;
+}
+
+
 
 footer {
     text-align: center;

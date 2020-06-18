@@ -22,5 +22,5 @@ class ItemSetForm(forms.ModelForm):
             'title',
             'archive',
             'description',
-            'images',
+            'image',
         ]

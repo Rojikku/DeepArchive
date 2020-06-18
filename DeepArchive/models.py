@@ -25,11 +25,21 @@ class ItemSet(models.Model):
     added = models.DateField(auto_now_add=True)
     slug = models.SlugField(unique=True, max_length=100)
     archive = models.ForeignKey('Archive', on_delete=models.CASCADE)
-    images = models.ImageField(null=True,blank=True)
+    image = models.ImageField(blank=True)
     tags = TaggableManager()
 
     def __str__(self):
         return self.title
+
+class ItemSetImage(models.Model):
+    """
+    Additional images beyond the main one for an item set
+    """
+    iset = models.ForeignKey(ItemSet, default=None, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images/')
+
+    def __str__(self):
+        return self.iset.title
 
 
 class Item(models.Model):
@@ -40,7 +50,7 @@ class Item(models.Model):
     description = models.TextField()
     added = models.DateField(auto_now_add=True)
     slug = models.SlugField(unique=True, max_length=100)
-    set = models.ManyToManyField(ItemSet)
+    iset = models.ForeignKey(ItemSet, default=None, on_delete=models.CASCADE)
     path = models.FilePathField()
 
     def __str__(self):
