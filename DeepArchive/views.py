@@ -47,7 +47,7 @@ def archive_creator(request):
         context = {
             'form': form,
         }
-        return render(request, "DeepArchive/dbnew.html", context)
+        return render(request, "DeepArchive/new/db.html", context)
 
 
 def itemset_creator(request):
