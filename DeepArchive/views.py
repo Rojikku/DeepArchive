@@ -52,6 +52,10 @@ def archive_creator(request):
 
 def itemset_creator(request):
     """Create a new ItemSet"""
+    # Autopopulate Archive Field WIP
+    # prev = request.GET.get('prev', '')
+    # data = {'archive': prev}
+    # form = ItemSetForm(request.POST or None, initial=data)
     form = ItemSetForm(request.POST or None)
 
     if request.method == "POST":
@@ -60,7 +64,10 @@ def itemset_creator(request):
             newitemset.slug = slugify(newitemset.title)
             newitemset.save()
             form.save_m2m()
-            return redirect("archivelist")
+            prev = request.GET.get('prev', '/')
+            if prev is not '/':
+                prev = '/db/' + prev
+            return redirect(prev)
     else:
         context = {
             'form': form,
