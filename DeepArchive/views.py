@@ -52,11 +52,11 @@ def archive_creator(request):
 
 def itemset_creator(request):
     """Create a new ItemSet"""
-    # Autopopulate Archive Field WIP
-    # prev = request.GET.get('prev', '')
-    # data = {'archive': prev}
-    # form = ItemSetForm(request.POST or None, initial=data)
-    form = ItemSetForm(request.POST or None)
+    # Autopopulate Archive Field
+    prev = request.GET.get('prev', '')
+    prev_entry = Archive.objects.get(slug=prev).pk
+    data = {'archive': prev_entry}
+    form = ItemSetForm(request.POST or None, initial=data)
 
     if request.method == "POST":
         if form.is_valid():
