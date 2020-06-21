@@ -22,6 +22,11 @@ class ArchiveContents(ListView):
     model = ItemSet
     template_name = 'DeepArchive/dbview.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['dbname'] = self.kwargs['dbname']
+        return context
+
     def get_queryset(self):
         """Filter by dbname"""
         dbname = self.kwargs['dbname']
@@ -55,8 +60,11 @@ def itemset_creator(request):
     """Create a new ItemSet"""
     # Autopopulate Archive Field
     prev = request.GET.get('prev', '')
-    prev_entry = Archive.objects.get(slug=prev).pk
-    data = {'archive': prev_entry}
+    try:
+        prev_entry = Archive.objects.get(slug=prev).pk
+        data = {'archive': prev_entry}
+    except:
+        data = {}
     form = ItemSetForm(request.POST or None, initial=data)
 
     if request.method == "POST":
