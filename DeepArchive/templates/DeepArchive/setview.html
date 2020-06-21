@@ -1,9 +1,15 @@
 {% extends "DeepArchive/layout.html" %}
 {% block title %}
-{{ itemset.title|title }} Details
+{{ itemset.title | title }} Details
 {% endblock %}
 {% block content %}
-<h1>Title: {{ itemset.title|title }}</h1>
+<a href="{% url 'archiveviewer' dbname=itemset.archive.slug %}">Backsies</a>
+
+<h1>Title: {{ itemset.title | title }}</h1>
+<p>Image?: {{ itemset.image }}</p>
 <h3>Added on {{ itemset.added }}, currently in {{ itemset.archive | title }}</h3>
+
+<h5>Description:</h5>
+<p>{{ itemset.description }}</p>
 
 {% endblock %}
