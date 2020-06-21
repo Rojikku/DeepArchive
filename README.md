@@ -22,7 +22,7 @@ The goal for DeepArchive is to allow users to organize their files with features
 - [X] Make New Item Sets
 - [X] Actually redirect back to correct Archive after making a new item set
 - [X] Autofill Archive based on where you came from
-- [ ] Representative Images on Item Sets
+- [X] Representative Images on Item Sets
 - [ ] Flexbox layout for Item Sets
 - [ ] Extra Images on Item Sets
 - [X] Display Descriptions on Item Sets
