@@ -1,9 +1,19 @@
 {% extends "DeepArchive/layout.html" %}
 {% block title %}
+{% if dbname %}
 {{ dbname | title }} Archive
+{% endif %}
+{% if tag %}
+Tag: {{ tag | title }}
+{% endif %}
 {% endblock %}
 {% block content %}
+{% if dbname %}
 <h2>{{ dbname | title }} Archive</h2>
+{% endif %}
+{% if tag %}
+<h2>Tag: {{ tag | title }}</h2>
+{% endif %}
 {% if itemset_list %}
 <a href="{% url 'itemsetcreator' %}?prev={{ dbname }}">New Item Set</a>
 <!-- <div class="SetWrapper">
