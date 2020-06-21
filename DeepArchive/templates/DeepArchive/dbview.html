@@ -4,11 +4,11 @@
 {% endblock %}
 {% block content %}
 <h2>{{ dbname|title }} Archive</h2>
-{% if set_list %}
+{% if itemset_list %}
 <a href="{% url 'itemsetcreator' %}?prev={{ dbname }}">New Item Set</a>
 <!-- <div class="SetWrapper">
             <div class="SetContent">
-                {% for set in set_list %}
+                {% for set in itemset_list %}
                 <div class="SetTile">
                     <a class="SetTile-Link">
                         <div class="SetTile-Thumb">
@@ -32,8 +32,8 @@
         </tr>
     </thead>
     <tbody class="table-body">
-        {% for set in set_list %}
-        <tr class="row-link">
+        {% for set in itemset_list %}
+        <tr class="row-link" href="{% url 'itemsetdetails' slug=set.slug %}">
             <td>{{ set.title }}</td>
             <td>{{ set.description }}</td>
             <td>{{ set.added }}</td>

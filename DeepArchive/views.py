@@ -3,33 +3,34 @@ DeepArchive Views
 """
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.defaultfilters import slugify
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from taggit.models import Tag
 
 from DeepArchive.models import Archive, ItemSet
 from DeepArchive.forms import ArchiveForm, ItemSetForm
 
 
-def archive_list(request):
-    """
-    Archive List and default page
-    """
-    archives = Archive.objects.order_by("title")
-    return render(request, 'DeepArchive/dblist.html', {
-        'archive_list': archives,
-    })
+class ArchiveList(ListView):
+    """Archive List and default page"""
+    model = Archive
+    queryset = Archive.objects.order_by("title")
+    template_name = 'DeepArchive/dblist.html'
 
 
-def archive_viewer(request, dbname):
-    """
-    Display the set contents of an Archive based on dbname
-    """
-    ver_db = get_object_or_404(Archive, slug=dbname)
-    iset = ItemSet.objects.filter(archive=ver_db)
-    return render(request, 'DeepArchive/dbview.html', {
-        'dbname': dbname,
-        'set_list': iset,
-    })
+class ArchiveContents(ListView):
+    """Display the set contents of an Archive based on dbname"""
+    model = ItemSet
+    template_name = 'DeepArchive/dbview.html'
+
+    def get_queryset(self):
+        """Filter by dbname"""
+        dbname = self.kwargs['dbname']
+        return ItemSet.objects.filter(archive__slug=dbname).order_by("title")
+
+class ItemSetDetails(DetailView):
+    """Details view of item sets"""
+    model = ItemSet
+    template_name = 'DeepArchive/setview.html'
 
 
 def archive_creator(request):
