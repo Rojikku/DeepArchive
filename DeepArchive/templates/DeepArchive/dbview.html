@@ -43,6 +43,6 @@
     </tbody>
 </table>
 {% else %}
-<p>No item sets have been made. Create a <a href="{% url 'itemsetcreator' %}">New Item Set</a>?</p>
+<p>No item sets have been made. Create a <a href="{% url 'itemsetcreator' %}?prev={{ dbname }}">New Item Set</a>?</p>
 {% endif %}
 {% endblock %}
