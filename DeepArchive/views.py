@@ -6,8 +6,8 @@ from django.template.defaultfilters import slugify
 from django.views.generic import ListView, DetailView
 from taggit.models import Tag
 
-from DeepArchive.models import Archive, ItemSet
-from DeepArchive.forms import ArchiveForm, ItemSetForm
+from DeepArchive.models import Archive, ItemSet, Item
+from DeepArchive.forms import ArchiveForm, ItemSetForm, ItemForm
 
 
 class ArchiveList(ListView):
@@ -32,10 +32,19 @@ class ArchiveContents(ListView):
         dbname = self.kwargs['dbname']
         return ItemSet.objects.filter(archive__slug=dbname).order_by("title")
 
+
 class ItemSetDetails(DetailView):
     """Details view of item sets"""
     model = ItemSet
     template_name = 'DeepArchive/setview.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = self.kwargs['slug']
+        context['items'] = Item.objects.filter(
+            iset__slug=slug).order_by("title")
+        return context
+
 
 def tagged(request, slug):
     """Filter based on tag"""
@@ -63,8 +72,9 @@ def archive_creator(request):
     else:
         context = {
             'form': form,
+            'type': "Archive"
         }
-        return render(request, "DeepArchive/new/db.html", context)
+        return render(request, "DeepArchive/new/generic.html", context)
 
 
 def itemset_creator(request):
@@ -92,5 +102,36 @@ def itemset_creator(request):
     else:
         context = {
             'form': form,
+            'type': "ItemSet"
         }
-        return render(request, "DeepArchive/new/itemset.html", context)
+        return render(request, "DeepArchive/new/generic.html", context)
+
+
+def item_creator(request):
+    """Create a new Item"""
+    # Autopopulate ItemSet Field
+    prev = request.GET.get('prev', '')
+    try:
+        prev_entry = ItemSet.objects.get(slug=prev).pk
+        data = {'iset': prev_entry}
+    except:
+        data = {}
+    form = ItemForm(initial=data)
+
+    if request.method == "POST":
+        form = ItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            newitemset = form.save(commit=False)
+            newitemset.slug = slugify(newitemset.title)
+            newitemset.save()
+            form.save_m2m()
+            prev = request.GET.get('prev', '/')
+            if prev is not '/':
+                prev = '/itemset/' + prev
+            return redirect(prev)
+    else:
+        context = {
+            'form': form,
+            'type': "Item"
+        }
+        return render(request, "DeepArchive/new/generic.html", context)

@@ -4,9 +4,11 @@ Database Models for Archive Management
 from django.db import models
 from taggit.managers import TaggableManager
 
+
 def image_path(instance, filename):
     """Sets image location to MEDIA_ROOT/images/Archive_Slug/Itemset_Slug"""
     return 'images/{0}/{1}/{2}'.format(instance.archive.slug, instance.slug, filename)
+
 
 class Archive(models.Model):
     """
@@ -18,6 +20,7 @@ class Archive(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class ItemSet(models.Model):
     """
@@ -34,6 +37,7 @@ class ItemSet(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class ItemSetImage(models.Model):
     """
@@ -54,8 +58,9 @@ class Item(models.Model):
     description = models.TextField(blank=True)
     added = models.DateField(auto_now_add=True)
     slug = models.SlugField(unique=True, max_length=100)
-    iset = models.ForeignKey(ItemSet, default=None, on_delete=models.CASCADE)
-    path = models.FilePathField()
+    iset = models.ForeignKey('ItemSet', on_delete=models.CASCADE)
+    # The below model type is useless and needs to be replaced with a different system
+    filepath = models.FilePathField(path='/')
 
     def __str__(self):
         return self.title

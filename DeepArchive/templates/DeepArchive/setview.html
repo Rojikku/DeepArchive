@@ -20,8 +20,14 @@
 
 <h3>Description:</h3>
 <p>{{ itemset.description }}</p>
-
+{% if items %}
 <h3>Files:</h3>
-<p>To Be Figured Out?</p>
+{% for item in items %}
+<a href="#">{{ item }}</a>
+{% endfor %}
+{% else %}
+<p>No items, add one</p>
+{% endif %}
+<p><a href="{% url 'itemcreator' %}?prev={{ itemset.slug }}">Add Item</a></p>
 
 {% endblock %}

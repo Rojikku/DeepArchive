@@ -14,6 +14,7 @@ class ArchiveForm(forms.ModelForm):
             'description',
         ]
 
+
 class ItemSetForm(forms.ModelForm):
     """Form for ItemSet Model"""
     class Meta:
@@ -26,6 +27,7 @@ class ItemSetForm(forms.ModelForm):
             'description',
         ]
 
+
 class ItemSetImageForm(forms.ModelForm):
     """Form for ItemSetImages"""
     class Meta:
@@ -35,9 +37,16 @@ class ItemSetImageForm(forms.ModelForm):
             'image'
         ]
 
-ItemSetImageFormSet = forms.inlineformset_factory(ItemSet, ItemSetImage, form=ItemSetImageForm, extra=1)
 
-# class ItemForm(forms.ModelForm):
-#     """Form for Items"""
-#     class Meta:
-#         model = Item
+class ItemForm(forms.ModelForm):
+    """Form for Items"""
+    class Meta:
+        model = Item
+        fields = [
+            'iset',
+            'title',
+            'description',
+            'filepath',
+        ]
+
+# ItemSetImageFormSet = forms.inlineformset_factory(ItemSet, ItemSetImage, form=ItemSetImageForm, extra=1)
