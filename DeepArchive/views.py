@@ -65,9 +65,10 @@ def itemset_creator(request):
         data = {'archive': prev_entry}
     except:
         data = {}
-    form = ItemSetForm(request.POST or None, initial=data)
+    form = ItemSetForm(initial=data)
 
     if request.method == "POST":
+        form = ItemSetForm(request.POST, request.FILES)
         if form.is_valid():
             newitemset = form.save(commit=False)
             newitemset.slug = slugify(newitemset.title)
