@@ -26,7 +26,8 @@ The goal for DeepArchive is to allow users to organize their files with features
 - [ ] Flexbox layout for Item Sets
 - [ ] Extra Images on Item Sets
 - [X] Display Descriptions on Item Sets
-- [ ] Display Tags on Item Sets
+- [X] Display Tags on Item Sets
+- [X] Filter by a Tag on Item Sets
 - [ ] Searchable Tags on Item Sets
 - [ ] Items can go in Item Sets
 - [ ] Display Descriptions on Items

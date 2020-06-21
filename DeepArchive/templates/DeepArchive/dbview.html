@@ -29,15 +29,17 @@
             <th>Description</th>
             <th>Added</th>
             <th>Archive</th>
+            <th>Tags</th>
         </tr>
     </thead>
     <tbody class="table-body">
         {% for set in itemset_list %}
         <tr class="row-link" href="{% url 'itemsetdetails' slug=set.slug %}">
             <td>{{ set.title }}</td>
-            <td>{{ set.description }}</td>
+            <td>{{ set.description | truncatewords:10 }}</td>
             <td>{{ set.added }}</td>
             <td>{{ set.archive }}</td>
+            <td>{% for tag in set.tags.all %}{{ tag | title }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
         </tr>
         {% endfor %}
     </tbody>

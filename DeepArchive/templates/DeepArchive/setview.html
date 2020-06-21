@@ -6,12 +6,22 @@
 <a href="{% url 'archiveviewer' dbname=itemset.archive.slug %}">Backsies</a>
 
 <h1>Title: {{ itemset.title | title }}</h1>
+<h5>Added on {{ itemset.added }}, currently in {{ itemset.archive | title }}</h5>
+{% if itemset.tags %}
+{% for tag in itemset.tags.all %}
+<a href="{% url 'tagged' tag.slug %}" class="badge badge-success">
+    {{ tag }}
+</a>
+{% endfor %}
+{% endif %}
 {% if itemset.image %}
 <img src ="{{ itemset.image.url }}" />
 {% endif %}
-<h3>Added on {{ itemset.added }}, currently in {{ itemset.archive | title }}</h3>
 
-<h5>Description:</h5>
+<h3>Description:</h3>
 <p>{{ itemset.description }}</p>
+
+<h3>Files:</h3>
+<p>To Be Figured Out?</p>
 
 {% endblock %}

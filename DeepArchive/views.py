@@ -37,6 +37,17 @@ class ItemSetDetails(DetailView):
     model = ItemSet
     template_name = 'DeepArchive/setview.html'
 
+def tagged(request, slug):
+    """Filter based on tag"""
+    tag = get_object_or_404(Tag, slug=slug)
+    # Filter itemsets by tag
+    sets = ItemSet.objects.filter(tags=tag)
+    context = {
+        'tag': tag,
+        'itemset_list': sets,
+    }
+    return render(request, 'DeepArchive/dbview.html', context)
+
 
 def archive_creator(request):
     """Create a new Archive"""

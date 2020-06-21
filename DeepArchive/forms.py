@@ -19,10 +19,11 @@ class ItemSetForm(forms.ModelForm):
     class Meta:
         model = ItemSet
         fields = [
-            'title',
             'archive',
-            'description',
+            'title',
+            'tags',
             'image',
+            'description',
         ]
 
 class ItemSetImageForm(forms.ModelForm):
