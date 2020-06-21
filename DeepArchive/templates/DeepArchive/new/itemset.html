@@ -3,7 +3,7 @@
 New Item Set
 {% endblock %}
 {% block content %}
-<form method="POST" class="form itemset-form">
+<form enctype="multipart/form-data" method="POST" class="form itemset-form">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="save btn btn-default">Create</button>

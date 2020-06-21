@@ -6,7 +6,9 @@
 <a href="{% url 'archiveviewer' dbname=itemset.archive.slug %}">Backsies</a>
 
 <h1>Title: {{ itemset.title | title }}</h1>
-<p>Image?: {{ itemset.image }}</p>
+{% if itemset.image %}
+<img src ="{{ itemset.image.url }}" />
+{% endif %}
 <h3>Added on {{ itemset.added }}, currently in {{ itemset.archive | title }}</h3>
 
 <h5>Description:</h5>
